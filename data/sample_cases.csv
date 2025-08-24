@@ -1,0 +1,7 @@
+query,expected_full_substr,expected_house_number,expected_korpus,expected_stroenie,must_be_top1
+изюмская 49к4,изюмская ул,49,4,,true
+изюмская 49 к 3,изюмская ул,49,3,,true
+изюмская 49,изюмская ул,49,,,
+тверская 7,тверская,7,,,
+
+

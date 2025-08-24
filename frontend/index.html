@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIAS Адресный поиск</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main-container {
+            display: flex;
+            height: 100vh;
+            gap: 0;
+        }
+        
+        .left-panel {
+            width: 60%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .right-panel {
+            width: 40%;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .left-header {
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .left-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-weight: 300;
+        }
+        
+        .left-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .right-header {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .right-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .search-panel {
+            padding: 20px;
+            flex-shrink: 0;
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 18px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .search-input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        
+        .search-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .search-results {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: white;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4facfe;
+            transition: transform 0.2s ease;
+        }
+        
+        .result-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .result-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .result-details {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .result-score {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #c33;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .search-stats {
+            background: #f1f3f4;
+            padding: 15px 20px;
+            border-top: 1px solid #e1e5e9;
+            color: #5f6368;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .quick-searches {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e5e9;
+        }
+        
+        .quick-searches h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .quick-btn {
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .quick-btn:hover {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 2px 8px rgba(255, 154, 158, 0.3);
+        }
+        
+        .etl-progress {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-label {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        
+        .tests-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .tests-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .tests-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+        
+        .tests-title {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .tests-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .test-btn {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .test-btn.danger {
+            background: linear-gradient(45deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+        
+        .tests-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .tests-table th,
+        .tests-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+            font-size: 13px;
+        }
+        
+        .tests-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 12px;
+        }
+        
+        .tests-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 3px 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .status-working {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .correct-badge {
+            padding: 3px 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .correct-yes {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .correct-no {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .add-test-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .add-test-form h4 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                height: 100vh;
+            }
+            
+            .left-panel {
+                width: 100%;
+                height: 60%;
+            }
+            
+            .right-panel {
+                width: 100%;
+                height: 40%;
+            }
+            
+            .left-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .right-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Левая панель: Тесты -->
+        <div class="left-panel">
+            <div class="left-header">
+                <h1>🧪 Статистика тестов</h1>
+                <p>Управление и мониторинг тестов поиска</p>
+            </div>
+            
+            <!-- Секция тестов -->
+            <div class="tests-section">
+                <div class="tests-content">
+                    <div class="tests-header">
+                        <div class="tests-actions">
+                            <button class="test-btn" onclick="runAllTests()">▶️ Запустить тесты</button>
+                            <button class="test-btn" onclick="toggleAddTestForm()">➕ Добавить тест</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px; font-size: 13px; color: #666;">
+                        💡 Кликните по запросу в таблице, чтобы выполнить поиск
+                    </div>
+            
+            <!-- Форма добавления тестов -->
+            <div id="addTestForm" class="add-test-form" style="display: none;">
+                <h4>Добавить тесты списком</h4>
+                <div class="form-group">
+                    <label for="newTestQueries">Список адресов (по одному в строке):</label>
+                    <textarea id="newTestQueries" rows="8" placeholder="Москва, Тверская ул., 10&#10;Москва, Арбат, 15&#10;Москва, Ленинский пр-т, 25"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newTestStatus">Статус:</label>
+                        <select id="newTestStatus">
+                            <option value="pending">В работе</option>
+                            <option value="working">Рабочий</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="test-btn" onclick="addTestsFromList()">Добавить все</button>
+            </div>
+            
+            <!-- Таблица тестов -->
+            <div id="testsTable" style="display: none;">
+                <table class="tests-table">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Запрос клиента</th>
+                            <th>Ответ верный</th>
+                            <th>Ответ поиска</th>
+                            <th>Статус</th>
+                            <th>Корректность</th>
+                            <th>Удалить</th>
+                        </tr>
+                    </thead>
+                    <tbody id="testsTableBody">
+                    </tbody>
+                </table>
+            </div>
+            
+                    <div id="testsLoading" style="text-align: center; padding: 20px; color: #7f8c8d;">
+                        Загрузка тестов...
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Правая панель: Поиск -->
+        <div class="right-panel">
+            <div class="right-header">
+                <h2>🔍 Поиск адресов FIAS</h2>
+                
+                <!-- Прогресс-бар ETL -->
+                <div id="etlProgress" class="etl-progress" style="display: none;">
+                    <div class="progress-label">📊 Загрузка данных:</div>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <div id="progressText" class="progress-text">0%</div>
+                </div>
+            </div>
+            
+            <div class="search-panel">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Введите адрес: Москва, Тверская улица, 10..."
+                    autocomplete="off"
+                >
+                <button id="searchBtn" class="search-btn">🔍 Найти адрес</button>
+                
+                <!-- Быстрые поиски -->
+                <div class="quick-searches">
+                    <h3>🚀 Быстрые поиски:</h3>
+                    <div class="quick-buttons">
+                        <button class="quick-btn" onclick="quickSearch('тверская')">🛣️ Тверская</button>
+                        <button class="quick-btn" onclick="quickSearch('1-я тверская-ямская')">🏙️ 1-я Тверская-Ямская</button>
+                        <button class="quick-btn" onclick="quickSearch('красная площадь')">🏛️ Красная площадь</button>
+                        <button class="quick-btn" onclick="quickSearch('арбат')">🚶 Арбат</button>
+                        <button class="quick-btn" onclick="quickSearch('московский')">🌃 Московский</button>
+                        <button class="quick-btn" onclick="quickSearch('центральный')">🎯 Центральный</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="results" class="search-results" style="display: none;"></div>
+            
+            <div id="stats" class="search-stats" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = `${location.protocol}//${location.hostname}:8000`;
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsDiv = document.getElementById('results');
+        const statsDiv = document.getElementById('stats');
+
+        // Поиск по Enter
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Поиск по кнопке
+        searchBtn.addEventListener('click', performSearch);
+
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            
+            if (!query) {
+                alert('Введите запрос для поиска');
+                return;
+            }
+
+            // Показываем индикатор загрузки
+            searchBtn.disabled = true;
+            searchBtn.textContent = '⏳ Поиск...';
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = '<div class="loading">Выполняется поиск...</div>';
+            statsDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(query)}&limit=10`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                displayResults(data);
+                
+            } catch (error) {
+                console.error('Ошибка поиска:', error);
+                resultsDiv.innerHTML = `<div class="error">❌ Ошибка поиска: ${error.message}</div>`;
+            } finally {
+                searchBtn.disabled = false;
+                searchBtn.textContent = '🔍 Найти адрес';
+            }
+        }
+
+        function displayResults(data) {
+            if (!data.results || data.results.length === 0) {
+                resultsDiv.innerHTML = '<div class="no-results">🤷‍♂️ Адреса не найдены. Попробуйте изменить запрос.</div>';
+                return;
+            }
+
+            let html = '';
+            
+            data.results.forEach(item => {
+                const levelEmoji = {
+                    'region': '🌍',
+                    'city': '🏙️',
+                    'street': '🛣️',
+                    'house': '🏠',
+                    'other': '📍'
+                };
+                
+                const emoji = levelEmoji[item.level] || '📍';
+                const score = item.score ? item.score.toFixed(2) : 'N/A';
+                
+                html += `
+                    <div class="result-item">
+                        <div class="result-name">${emoji} ${item.full_name}</div>
+                        <div class="result-details">
+                            <strong>Тип:</strong> ${item.level}
+                            ${item.region_code ? `| <strong>Регион:</strong> ${item.region_code}` : ''}
+                            ${item.house_number ? `| <strong>Дом:</strong> ${item.house_number}` : ''}
+                            ${item.geo ? `| <strong>Координаты:</strong> ${item.geo.lat.toFixed(6)}, ${item.geo.lon.toFixed(6)}` : ''}
+                        </div>
+                        <div class="result-score">Релевантность: ${score}</div>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+            
+            // Показываем статистику
+            statsDiv.innerHTML = `
+                📊 Найдено: <strong>${data.total}</strong> результатов 
+                | Запрос: "<strong>${data.normalized_query}</strong>"
+                ${data.house_number ? `| Дом: <strong>${data.house_number}</strong>` : ''}
+            `;
+            statsDiv.style.display = 'block';
+        }
+
+        // Быстрый поиск
+        function quickSearch(query) {
+            searchInput.value = query;
+            performSearch();
+        }
+
+        // Функция обновления статуса ETL
+        async function updateETLStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/etl-status`);
+                const data = await response.json();
+                
+                if (data.status === 'running' || data.progress_percent < 100) {
+                    document.getElementById('etlProgress').style.display = 'block';
+                    document.getElementById('progressFill').style.width = `${data.progress_percent}%`;
+                    document.getElementById('progressText').textContent = `${data.progress_percent}% - ${data.message}`;
+                } else {
+                    document.getElementById('etlProgress').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Ошибка получения статуса ETL:', error);
+            }
+        }
+
+        // Автофокус на поле поиска
+        searchInput.focus();
+        
+        // Проверяем статус ETL при загрузке страницы и каждые 5 секунд
+        updateETLStatus();
+        setInterval(updateETLStatus, 5000);
+        
+        // Загружаем тесты при загрузке страницы
+        loadTests();
+        
+        // Функции для работы с тестами
+        async function loadTests() {
+            try {
+                const response = await fetch(`${API_BASE}/tests`);
+                const data = await response.json();
+                displayTests(data.tests);
+            } catch (error) {
+                console.error('Ошибка загрузки тестов:', error);
+                document.getElementById('testsLoading').innerHTML = '❌ Ошибка загрузки тестов';
+            }
+        }
+        
+        function displayTests(tests) {
+            const tableBody = document.getElementById('testsTableBody');
+            const testsTable = document.getElementById('testsTable');
+            const testsLoading = document.getElementById('testsLoading');
+            
+            if (tests.length === 0) {
+                testsLoading.innerHTML = '📝 Тесты не найдены. Добавьте первый тест!';
+                return;
+            }
+            
+            let html = '';
+            
+            tests.forEach(test => {
+                const statusClass = test.status === 'working' ? 'status-working' : 'status-pending';
+                const correctClass = test.is_correct ? 'correct-yes' : 'correct-no';
+                const correctText = test.is_correct ? 'ДА' : 'НЕТ';
+                
+                html += `
+                    <tr>
+                        <td>${test.id}</td>
+                        <td style="cursor: pointer; color: #007bff;" onclick="searchFromTest('${test.query.replace(/'/g, "\\'")}')">${test.query}</td>
+                        <td>${test.expected_answer || '-'}</td>
+                        <td>${test.actual_answer || '-'}</td>
+                        <td><span class="status-badge ${statusClass}">${test.status}</span></td>
+                        <td><span class="correct-badge ${correctClass}">${correctText}</span></td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteTest(${test.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+            testsTable.style.display = 'block';
+            testsLoading.style.display = 'none';
+        }
+        
+        async function runAllTests() {
+            try {
+                const runBtn = document.querySelector('.test-btn');
+                runBtn.disabled = true;
+                runBtn.textContent = '⏳ Выполняются тесты...';
+                
+                const response = await fetch(`${API_BASE}/tests/run`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                // Показываем результат
+                alert(`Тесты выполнены!\nВсего: ${result.total}\nПройдено: ${result.passed}\nПровалено: ${result.failed}`);
+                
+                // Перезагружаем тесты
+                await loadTests();
+                
+            } catch (error) {
+                console.error('Ошибка выполнения тестов:', error);
+                alert('Ошибка выполнения тестов: ' + error.message);
+            } finally {
+                const runBtn = document.querySelector('.test-btn');
+                runBtn.disabled = false;
+                runBtn.textContent = '▶️ Запустить тесты';
+            }
+        }
+        
+        function toggleAddTestForm() {
+            const form = document.getElementById('addTestForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function searchFromTest(query) {
+            searchInput.value = query;
+            performSearch();
+        }
+        
+        async function addTestsFromList() {
+            const queriesText = document.getElementById('newTestQueries').value.trim();
+            const status = document.getElementById('newTestStatus').value;
+            
+            if (!queriesText) {
+                alert('Введите список адресов');
+                return;
+            }
+            
+            const queries = queriesText.split('\n').filter(q => q.trim());
+            
+            if (queries.length === 0) {
+                alert('Не найдено адресов для добавления');
+                return;
+            }
+            
+            try {
+                let addedCount = 0;
+                
+                for (const query of queries) {
+                    const trimmedQuery = query.trim();
+                    if (!trimmedQuery) continue;
+                    
+                    const response = await fetch(`${API_BASE}/tests`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            query: trimmedQuery,
+                            expected_answer: '',
+                            status: status,
+                            is_correct: false
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        addedCount++;
+                    }
+                }
+                
+                alert(`Добавлено ${addedCount} тестов из ${queries.length}!`);
+                document.getElementById('newTestQueries').value = '';
+                document.getElementById('addTestForm').style.display = 'none';
+                await loadTests();
+                
+            } catch (error) {
+                console.error('Ошибка добавления тестов:', error);
+                alert('Ошибка добавления тестов: ' + error.message);
+            }
+        }
+        
+        async function deleteTest(testId) {
+            if (!confirm('Удалить этот тест?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/tests/${testId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    alert('Тест удален!');
+                    await loadTests();
+                } else {
+                    const result = await response.json();
+                    alert('Ошибка удаления теста: ' + result.detail);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка удаления теста:', error);
+                alert('Ошибка удаления теста: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
