@@ -4,6 +4,7 @@
 import asyncio
 from typing import List, Optional, Dict, Any
 from elasticsearch import Elasticsearch
+from config import settings
 import logging
 
 from .models import AddressItem, GeoPoint
@@ -1419,7 +1420,7 @@ class SearchService:
                     logger.info(f"ES query: {_json.dumps(body, ensure_ascii=False)[:2000]}")
                 except Exception:
                     pass
-                return self.es.search(index=self.index, body=body)
+                return self.es.search(index=self.index, body=body, request_timeout=settings.ES_TIMEOUT)
 
             response = exec_search(search_body)
             hits = response.get("hits", {}).get("hits", [])
