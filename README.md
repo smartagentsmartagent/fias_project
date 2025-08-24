@@ -84,7 +84,18 @@ python3 -m http.server 8080 --directory fias_project/frontend
 ----------------
 - API: 8000 (Uvicorn, можно запускать с `--reload`)
 - Frontend: 8080 (любой статик-сервер)
-- Elasticsearch: см. `config` (URL берётся через `get_elasticsearch_url`)
+- Elasticsearch: 9200 (см. `config` и `INTEGRATION_GUIDE.md`)
+
+Интеграция с Elasticsearch
+--------------------------
+Подробная инструкция по настройке подключения Background Agent к Elasticsearch:
+- **Основная инструкция**: `INTEGRATION_GUIDE.md`
+- **Тестирование подключения**: `./test_elasticsearch_connection.sh`
+- **Настройка безопасности**: `./setup_elasticsearch_security.sh`
+- **Конфигурация Cursor**: `.cursor/environment.json`
+- **Пример переменных**: `env.example`
+
+**Текущее состояние**: Elasticsearch доступен по адресу `http://147.45.214.115:9200` без аутентификации.
 
 Процесс работы (SmartПоиск)
 ---------------------------

@@ -1,0 +1,13 @@
+{
+  "install": "pip install -r requirements.txt",
+  "env": {
+    "ES_URL": "${{ES_URL}}",
+    "ES_API_KEY": "${{ES_API_KEY}}"
+  },
+  "terminals": [
+    {
+      "name": "API",
+      "command": "python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload"
+    }
+  ]
+}

@@ -10,10 +10,12 @@ class Settings(BaseSettings):
     """Настройки приложения"""
     
     # Elasticsearch
-    ES_HOST: str = "localhost"
-    ES_PORT: int = 9200
-    ES_INDEX: str = "fias_addresses"
-    ES_TIMEOUT: int = 60  # Увеличиваем таймаут для массовых запросов
+    ES_URL: str = "http://localhost:9200"
+    ES_API_KEY: Optional[str] = None
+    ES_USER: Optional[str] = None
+    ES_PASS: Optional[str] = None
+    ES_INDEX: str = "fias_addresses_v2"
+    ES_TIMEOUT: int = 60
     
     # MySQL FIAS
     MYSQL_HOST: str = "mysql.node7.smartagent.ru"
@@ -43,9 +45,21 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
-def get_elasticsearch_url() -> str:
-    """URL для подключения к Elasticsearch"""
-    return f"http://{settings.ES_HOST}:{settings.ES_PORT}"
+def get_elasticsearch_config():
+    """Конфигурация для подключения к Elasticsearch"""
+    config = {
+        "hosts": [settings.ES_URL],
+        "timeout": settings.ES_TIMEOUT
+    }
+    
+    # API Key аутентификация (приоритет)
+    if settings.ES_API_KEY:
+        config["api_key"] = settings.ES_API_KEY
+    # Basic Auth (альтернатива)
+    elif settings.ES_USER and settings.ES_PASS:
+        config["http_auth"] = (settings.ES_USER, settings.ES_PASS)
+    
+    return config
 
 
 def get_mysql_url() -> str:
