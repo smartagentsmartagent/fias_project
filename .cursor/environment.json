@@ -1,13 +1,9 @@
 {
-  "install": "pip install -r requirements.txt",
-  "env": {
-    "ES_URL": "${{ES_URL}}",
-    "ES_API_KEY": "${{ES_API_KEY}}"
-  },
+  "install": "python3 -m venv .venv && . .venv/bin/activate && python -m pip install --upgrade pip && pip install -r requirements.txt",
   "terminals": [
-    {
-      "name": "API",
-      "command": "python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload"
-    }
+    { "name": "API",   "command": ". .venv/bin/activate && python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload" },
+    { "name": "Tests", "command": "curl -s -X POST http://localhost:8000/tests/run | jq '.total, .passed, .failed'" }
   ]
 }
+
+
