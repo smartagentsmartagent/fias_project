@@ -61,3 +61,6 @@ fi
 eval $STATUS_CMD | jq '.status, .number_of_nodes, .active_primary_shards' 2>/dev/null || eval $STATUS_CMD | head -n 5
 echo ""
 echo "=== Тестирование завершено ==="
+
+
+

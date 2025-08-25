@@ -752,8 +752,10 @@ class SearchService:
                     }
                 })
             
-            # Применяем мягкий фильтр по региону для приоритизации Москвы
+            # Применяем СТРОГИЙ фильтр по региону для Москвы - только результаты из Москвы
             existing_filters = search_body["query"]["bool"].get("filter", [])
+            # Удаляем любые существующие фильтры по region_code, чтобы избежать конфликтов
+            existing_filters = [f for f in existing_filters if not (isinstance(f, dict) and ("terms" in f or "term" in f) and "region_code" in f.get("terms", f.get("term", {})))]
             existing_filters.append({"terms": {"region_code": ["77", 77]}})
             search_body["query"]["bool"]["filter"] = existing_filters
         
@@ -862,6 +864,57 @@ class SearchService:
             existing_filters = search_body["query"]["bool"].get("filter", [])
             existing_filters.append({"terms": {"region_code": ["50", 50]}})
             search_body["query"]["bool"]["filter"] = existing_filters
+        
+        # Приоритизация Ленинградской области
+        # Если в запросе есть "ленинградская область" или передана информация о наличии "ленинградская область", усилим результаты из Ленинградской области
+        elif has_leningrad_region:
+            # Буст для результатов из Ленинградской области (по коду региона 47)
+            dynamic_should.append({
+                "constant_score": {
+                    "filter": {"terms": {"region_code": ["47", 47]}},
+                    "boost": 100.0
+                }
+            })
+            
+            # Дополнительный буст для городов в Ленинградской области
+            dynamic_should.append({
+                "bool": {
+                    "filter": [
+                        {"terms": {"region_code": ["47", 47]}},
+                        {"term": {"level": "city"}}
+                    ],
+                    "boost": 50.0
+                }
+            })
+            
+            # Применяем СТРОГИЙ фильтр по региону для Ленинградской области - только результаты из Ленинградской области
+            existing_filters = search_body["query"]["bool"].get("filter", [])
+            # Удаляем любые существующие фильтры по region_code, чтобы избежать конфликтов
+            existing_filters = [f for f in existing_filters if not (isinstance(f, dict) and ("terms" in f or "term" in f) and "region_code" in f.get("terms", f.get("term", {})))]
+            existing_filters.append({"terms": {"region_code": ["47", 47]}})
+            search_body["query"]["bool"]["filter"] = existing_filters
+            
+            # Специальная логика для иерархических адресов в Ленинградской области
+            # Если запрос содержит иерархию (например, "токсовское гп токсово гп"), ищем по фразе
+            if "гп" in query or "пос" in query or "г/" in query:
+                # Добавляем высокий буст для фразового поиска по полному адресу
+                dynamic_should.append({
+                    "match_phrase": {
+                        "full_norm": {
+                            "query": query,
+                            "boost": 50.0
+                        }
+                    }
+                })
+                # Также ищем по нормализованному названию
+                dynamic_should.append({
+                    "match_phrase": {
+                        "name_norm": {
+                            "query": query,
+                            "boost": 40.0
+                        }
+                    }
+                })
         else:
             # Базовый must если нет админ-синонимов
             # Добавляем альтернативу operator=or как бэкап внутри must
@@ -1580,19 +1633,34 @@ class SearchService:
                                     {"match": {"full_norm": {"query": query, "operator": "and"}}},
                                     {"term": {"level": "house"}}
                                 ],
-                                "should": []
+                                "should": [],
+                                "filter": []
                             }
                         },
                         "_source": search_body.get("_source", [])
                     }
+                    
+                    # Добавляем региональные фильтры, если они были в исходном запросе
+                    region_code = None
+                    if has_moscow:
+                        region_code = "77"
+                    elif has_moscow_region or has_balashikha:
+                        region_code = "50"  # Московская область
+                    elif has_leningrad_region:
+                        region_code = "47"  # Ленинградская область
+                    
+                    if region_code:
+                        similar_house_body["query"]["bool"]["filter"].append(
+                            {"terms": {"region_code": [region_code, int(region_code)]}}
+                        )
                     
                     # Если был номер дома, добавляем бусты для похожих номеров
                     if house_number:
                         # Буст для номеров, начинающихся с того же числа
                         house_base = house_number.split('/')[0] if '/' in house_number else house_number
                         similar_house_body["query"]["bool"]["should"].extend([
-                            {"wildcard": {"house_number": f"{house_base}*"}, "boost": 3.0},
-                            {"wildcard": {"house_number": f"*{house_base}*"}, "boost": 1.5}
+                            {"wildcard": {"house_number": f"{house_base}*"}},
+                            {"wildcard": {"house_number": f"*{house_base}*"}}
                         ])
                     
                     # Если был корпус, добавляем буст для домов с корпусами

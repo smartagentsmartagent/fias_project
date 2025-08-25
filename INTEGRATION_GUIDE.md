@@ -372,3 +372,6 @@ curl -X GET "http://147.45.214.115:9200/fias_addresses_v2/_search" \
 4. Рассмотреть использование Nginx прокси с HTTPS
 
 После настройки безопасности обновите `ES_URL` в Cursor Secrets на `https://your-domain.com` или ограничьте доступ по IP.
+
+
+

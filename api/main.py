@@ -520,7 +520,12 @@ async def process_single_test(test):
             actual_answer = response[0].full_name
         
         # Проверяем корректность
-        is_correct = actual_answer == test['expected_answer']
+        expected = test['expected_answer']
+        # Если ожидается null (пустой результат), то actual_answer должен быть пустым
+        if expected is None or expected == "":
+            is_correct = actual_answer == "" or actual_answer is None
+        else:
+            is_correct = actual_answer == expected
         
         return {
             "id": test['id'],
