@@ -619,41 +619,41 @@
     {
       "id": 81,
       "query": "Москва, Бирюлевская улица, 21К2",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо бирюлево восточное вн/тер-г, бирюлёвская ул, дом 21 к 2",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо бирюлево восточное вн/тер-г, бирюлёвская ул, дом 21 к 2"
     },
     {
       "id": 82,
       "query": "Москва, Большая Почтовая улица, 34",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо басманный вн/тер-г, большая почтовая ул, дом 34 стр 10",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо басманный вн/тер-г, большая почтовая ул, дом 34 стр 10"
     },
     {
       "id": 83,
       "query": "Москва, Большая Филевская улица, 3к1",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо фили-давыдково вн/тер-г, большая филёвская ул, дом 3 к 1",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо фили-давыдково вн/тер-г, большая филёвская ул, дом 3 к 1"
     },
     {
       "id": 84,
       "query": "Москва, Большая Филевская улица, 3к4",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо фили-давыдково вн/тер-г, большая филёвская ул, дом 3 к 4",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо фили-давыдково вн/тер-г, большая филёвская ул, дом 3 к 4"
     },
     {
       "id": 85,
       "query": "Москва, Большая Филевская улица, 4",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо фили-давыдково вн/тер-г, большая филёвская ул, дом 4",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо фили-давыдково вн/тер-г, большая филёвская ул, дом 4"
     },
     {
