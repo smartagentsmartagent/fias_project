@@ -365,7 +365,7 @@
       "query": "Ленинградская область, Сосновское с/пос, пос. Платформа 69-й км",
       "expected_answer": "",
       "is_correct": true,
-      "status": "pending",
+      "status": "working",
       "actual_answer": ""
     },
     {
@@ -387,9 +387,9 @@
     {
       "id": 52,
       "query": "Ленинградская область, Янегское с/пос, Деревня Старая сл., 61",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "ленинградская обл, выборгский м/р-н, первомайское сп, ильичёвская тер., дом 61/1",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "ленинградская обл, выборгский м/р-н, первомайское сп, ильичёвская тер., дом 61/1"
     },
     {
@@ -605,7 +605,7 @@
       "query": "Москва, Беговая аллея, 5К2",
       "expected_answer": "",
       "is_correct": true,
-      "status": "pending",
+      "status": "working",
       "actual_answer": ""
     },
     {

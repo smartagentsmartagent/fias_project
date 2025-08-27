@@ -347,6 +347,16 @@ def extract_house_number(text: str) -> Dict[str, Any]:
 	# Обрабатываем запятые как разделители - заменяем на пробелы
 	text = re.sub(r',\s*', ' ', text)
 
+	# Специальная обработка для километров - не извлекаем как номер дома
+	if re.search(r'\b\d+\s*й\s*км\b', text, flags=re.IGNORECASE):
+		return {
+			"text_without_house": text,
+			"house_number": None,
+			"korpus": None,
+			"stroenie": None,
+			"has_house": False
+		}
+
 	# Специальная обработка для названий улиц с числами
 	# Известные названия улиц, которые содержат числа как часть названия
 	street_names_with_numbers = [
@@ -477,6 +487,8 @@ def extract_house_number(text: str) -> Dict[str, Any]:
 	text_km_safe = text
 	text_km_safe = re.sub(r'\b(\d+)[\-–—‑]?й?\s*(?:км|километр)\b', ' километр ', text_km_safe, flags=re.IGNORECASE)
 	text_km_safe = re.sub(r'\b(?:км|километр)\s*(\d+)\b', ' километр ', text_km_safe, flags=re.IGNORECASE)
+	# Специальная обработка для случаев типа "69 й километр" (после нормализации числительных)
+	text_km_safe = re.sub(r'\b(\d+)\s+й\s+километр\b', ' километр ', text_km_safe, flags=re.IGNORECASE)
 
 	# Алиасы
 	corp_alias = r'(?:корпус|корп|кор\.?|к)'
