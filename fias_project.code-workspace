@@ -1,0 +1,20 @@
+{
+    "folders": [
+        {
+            "name": "FIAS Project",
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/__pycache__": true,
+            "**/*.pyc": true,
+            "**/.venv": true
+        },
+        "python.defaultInterpreterPath": "./.venv/bin/python",
+        "python.terminal.activateEnvironment": true
+    }
+}
+
+
+

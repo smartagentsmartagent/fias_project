@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     """Настройки приложения"""
     
     # Elasticsearch
-    ES_URL: str = "http://localhost:9200"
+    ES_URL: str = "http://147.45.214.115:9200"
     ES_API_KEY: Optional[str] = None
     ES_USER: Optional[str] = None
     ES_PASS: Optional[str] = None

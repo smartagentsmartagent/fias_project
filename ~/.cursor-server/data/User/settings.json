@@ -1,0 +1,12 @@
+{
+    "extensions.experimental.affinity": {
+        "shalldie.background": "ui"
+    },
+    "extensions.autoUpdate": true,
+    "extensions.autoCheckUpdates": true,
+    "extensions.ignoreRecommendations": false,
+    "workbench.enableExperiments": true,
+    "cursor.experimentalFeatures": true,
+    "cursor.backgroundAgents.enabled": true
+}
+

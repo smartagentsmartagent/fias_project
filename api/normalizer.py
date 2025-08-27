@@ -667,7 +667,7 @@ def normalize_query(query: str) -> Dict[str, Any]:
 	has_balashikha = bool(re.search(r'\bбалашиха\b', query, flags=re.IGNORECASE))
 	
 	# Проверяем, есть ли "ленинградская область" в исходном запросе
-	has_leningrad_region = bool(re.search(r'\bленинградская\s+область\b', query, flags=re.IGNORECASE))
+	has_leningrad_region = bool(re.search(r'\bленинградская\s+(область|обл\.?)\b', query, flags=re.IGNORECASE))
 	
 	# Удаляем "москва" из запроса для поиска (но сохраняем в оригинале для фильтрации)
 	normalized_for_search = re.sub(r'\bмосква\b', '', normalized, flags=re.IGNORECASE).strip()
