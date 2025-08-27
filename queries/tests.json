@@ -561,14 +561,6 @@
       "actual_answer": "москва г, мо головинский вн/тер-г, автомоторная ул, дом 4а стр 21"
     },
     {
-      "id": 74,
-      "query": "Москва, аллея Первой Маевки, 15с1",
-      "expected_answer": "",
-      "is_correct": true,
-      "status": "pending",
-      "actual_answer": ""
-    },
-    {
       "id": 75,
       "query": "Москва, Алтуфьевское шоссе, 53к1",
       "expected_answer": "москва г, мо отрадное вн/тер-г, алтуфьевское ш, дом 53 к 1",
@@ -659,97 +651,97 @@
     {
       "id": 86,
       "query": "Москва, Боровское шоссе, 2к7",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо ново-переделкино вн/тер-г, боровское ш., дом 2 к 7",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо ново-переделкино вн/тер-г, боровское ш., дом 2 к 7"
     },
     {
       "id": 87,
       "query": "Москва, бульвар Дмитрия Донского, 9К3",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо северное бутово вн/тер-г, дмитрия донского б-р, дом 9 к 3",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо северное бутово вн/тер-г, дмитрия донского б-р, дом 9 к 3"
     },
     {
       "id": 88,
       "query": "Москва, Веерная улица, 18А",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо очаково-матвеевское вн/тер-г, веерная ул, дом 18а",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо очаково-матвеевское вн/тер-г, веерная ул, дом 18а"
     },
     {
       "id": 89,
       "query": "Москва, Внуковское поселение, улица Анны Ахматовой, 11к3",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, внуковское вн/тер-г, анны ахматовой ул, дом 11 к 3",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, внуковское вн/тер-г, анны ахматовой ул, дом 11 к 3"
     },
     {
       "id": 90,
       "query": "Москва, Внуковское поселение, улица Летчика Ульянина, 4",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, внуковское вн/тер-г, лётчика ульянина ул, дом 4",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, внуковское вн/тер-г, лётчика ульянина ул, дом 4"
     },
     {
       "id": 91,
       "query": "Москва, Волгоградский проспект, 32/5к3",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо таганский вн/тер-г, волгоградский пр-кт, дом 32/5 к 3",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо таганский вн/тер-г, волгоградский пр-кт, дом 32/5 к 3"
     },
     {
       "id": 92,
       "query": "Москва, Волоколамское шоссе, 71/22к2",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо покровское-стрешнево вн/тер-г, волоколамское ш, дом 71/22 к 2",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо покровское-стрешнево вн/тер-г, волоколамское ш, дом 71/22 к 2"
     },
     {
       "id": 93,
       "query": "Москва, Волоколамское шоссе, 71/22к3",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо покровское-стрешнево вн/тер-г, волоколамское ш, дом 71/22 к 3",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо покровское-стрешнево вн/тер-г, волоколамское ш, дом 71/22 к 3"
     },
     {
       "id": 94,
       "query": "Москва, Выборгская улица, 9/1",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо войковский вн/тер-г, выборгская ул, дом 9/1",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо войковский вн/тер-г, выборгская ул, дом 9/1"
     },
     {
       "id": 95,
       "query": "Москва, Грузинский переулок, 3С1",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо пресненский вн/тер-г, грузинский пер, дом 3 стр 1",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо пресненский вн/тер-г, грузинский пер, дом 3 стр 1"
     },
     {
       "id": 96,
       "query": "Москва, Десеновское поселение, улица 3-я Нововатутинская, 8",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, десеновское вн/тер-г, 3-я нововатутинская ул, дом 8",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, десеновское вн/тер-г, 3-я нововатутинская ул, дом 8"
     },
     {
       "id": 97,
       "query": "Москва, Доброслободская улица, 11-13",
-      "expected_answer": "",
-      "is_correct": false,
-      "status": "pending",
+      "expected_answer": "москва г, мо басманный вн/тер-г, доброслободская ул, дом 11-13",
+      "is_correct": true,
+      "status": "working",
       "actual_answer": "москва г, мо басманный вн/тер-г, доброслободская ул, дом 11-13"
     },
     {
@@ -2511,6 +2503,14 @@
       "is_correct": false,
       "status": "pending",
       "actual_answer": ""
+    },
+    {
+      "id": 318,
+      "query": "Москва, аллея Первой Маевки, 15с1",
+      "expected_answer": "",
+      "is_correct": false,
+      "status": "pending",
+      "actual_answer": "москва г, кленовское вн/тер-г, вяткино д, дом 15/1 стр 1"
     }
   ]
 }
